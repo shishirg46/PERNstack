@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/shishirg46/MERNstack#readme",
   "devDependencies": {
+    "@types/node": "^22.13.1",
     "typescript": "^5.7.3"
   }
 }
