@@ -1,5 +1,2 @@
-const greet = (name: string) => {
-    console.log('welcome ' + name)
-}
-
-greet('Shishir')
+import { Config } from './config'
+console.log(Config.PORT)
