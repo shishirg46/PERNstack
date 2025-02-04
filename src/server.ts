@@ -1,5 +1,5 @@
-const greet = (name: string)=>{
-    console.log("welcome " + name)
+const greet = (name: string) => {
+    console.log('welcome ' + name)
 }
 
-greet("Shishir")
+greet('Shishir')
