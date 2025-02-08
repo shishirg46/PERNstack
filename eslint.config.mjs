@@ -5,7 +5,13 @@ export default tseslint.config(
     eslint.configs.recommended,
     tseslint.configs.recommendedTypeChecked,
     {
-        ignores: ['dist', 'node_modules', 'eslint.config.mjs' ,'jest.config.js','app.spec.ts'],
+        ignores: [
+            'dist',
+            'node_modules',
+            'eslint.config.mjs',
+            'jest.config.js',
+            'app.spec.ts',
+        ],
     },
     {
         languageOptions: {
