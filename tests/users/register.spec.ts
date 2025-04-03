@@ -74,6 +74,21 @@ describe('POST auth/register', () => {
             expect(users[0].email).toBe(userData.email)
             expect(users[0].password).toBe(userData.password)
         })
+        it('should return user ID', async () => {
+            const userData = {
+                firstName: 'Rakesh',
+                lastName: 'k',
+                email: 'hello@gmail.com',
+                password: 'secret',
+            }
+
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData)
+
+            expect(response.body.id).toBeDefined()
+            expect(typeof response.body.id).toBe('number')
+        })
     })
     describe('fields are missing', () => {
         it('', () => {})
