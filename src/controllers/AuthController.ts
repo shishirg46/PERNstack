@@ -2,6 +2,7 @@ import { NextFunction, Response } from 'express'
 import { RegisterUserRequest } from '../types'
 import { UserService } from '../services/UserService'
 import { Logger } from 'winston'
+import { Roles } from '../constants'
 
 export class AuthController {
     constructor(
@@ -19,6 +20,7 @@ export class AuthController {
             lastName,
             email,
             password: '*****',
+            role: Roles.CUSTOMER,
         })
         try {
             const newUser = await this.userService.create({
