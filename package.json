@@ -29,6 +29,7 @@
         "@types/http-errors": "^2.0.4",
         "@types/jest": "^29.5.14",
         "@types/node": "^16.11.10",
+        "@types/pg": "^8.15.4",
         "@types/supertest": "^6.0.2",
         "@types/winston": "^2.4.4",
         "cross-env": "^7.0.3",
@@ -54,7 +55,8 @@
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
         "http-errors": "^2.0.0",
-        "pg": "^8.4.0",
+        "pg": "^8.16.0",
+        "postgres": "^3.4.7",
         "reflect-metadata": "^0.1.13",
         "typeorm": "0.3.20",
         "winston": "^3.17.0"
