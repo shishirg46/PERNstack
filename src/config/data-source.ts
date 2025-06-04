@@ -28,7 +28,7 @@ export const AppDataSource = new DataSource({
     username: 'postgres',
     password: 'el shishir',
     database: process.env.NODE_ENV === 'test' ? 'pizza_test' : 'pizza',
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: [User],
     migrations: [],

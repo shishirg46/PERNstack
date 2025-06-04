@@ -3,7 +3,6 @@ import app from '../../src/app'
 import { DataSource } from 'typeorm'
 import { AppDataSource } from '../../src/config/data-source'
 import { User } from '../../src/entity/User'
-import truncateTables from '../utils/index'
 import { Roles } from '../../src/constants'
 describe('POST auth/register', () => {
     let connection: DataSource
@@ -77,7 +76,7 @@ describe('POST auth/register', () => {
             expect(users[0].firstName).toBe(userData.firstName)
             expect(users[0].lastName).toBe(userData.lastName)
             expect(users[0].email).toBe(userData.email)
-            expect(users[0].password).toBe(userData.password)
+            expect(users[0].password).not.toBe(userData.password)
             expect(users[0].role).toBe(userData.role)
         })
         it('should return user ID', async () => {
@@ -113,6 +112,22 @@ describe('POST auth/register', () => {
             const users = await userRepository.find()
             expect(users[0]).toHaveProperty('role')
             expect(users[0].role).toBe(Roles.CUSTOMER)
+        })
+
+        it('should hash the password', async () => {
+            const userData = {
+                firstName: 'Rakesh',
+                lastName: 'k',
+                email: 'hello@gmail.com',
+                password: 'secret',
+                role: 'customer',
+            }
+            await request(app).post('/auth/register').send(userData)
+            const userRepository = connection.getRepository(User)
+            const users = await userRepository.find()
+            expect(users[0].password).not.toBe(userData.password)
+            expect(users[0].password).toHaveLength(60)
+            expect(users[0].password).toMatch(/^\$2[ayb]\$.{56}$/) // bcrypt hash format
         })
     })
     describe('fields are missing', () => {
