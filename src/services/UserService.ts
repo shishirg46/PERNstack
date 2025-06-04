@@ -12,6 +12,18 @@ export class UserService {
         const saltOrRounds = 10
         const hashedPassword = await bcrypt.hash(password, saltOrRounds)
 
+        // Check if the email already exists
+        const existingUser = await this.userRepository.findOne({
+            where: { email: email },
+        })
+        if (existingUser) {
+            const err = createHttpError(
+                400,
+                'Email already exists, please use a different email',
+            )
+            throw err
+        }
+
         try {
             const newUser = this.userRepository.create({
                 firstName,
