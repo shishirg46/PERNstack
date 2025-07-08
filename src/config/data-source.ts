@@ -1,32 +1,16 @@
-// import { DataSource } from 'typeorm'
-// import { User } from '../entity/User'
-// import { Config } from '.'
-
-// export const AppDataSource = new DataSource({
-//     type: 'postgres',
-//     host: Config.DB_HOST,
-//     port: Number(Config.DB_PORT),
-//     username: Config.DB_USERNAME,
-//     password: Config.DB_PASSWORD,
-//     database: Config.DB_NAME,
-//     synchronize: false,
-//     logging: false,
-//     entities: [User],
-//     migrations: [],
-//     subscribers: [],
-// })
-
-// src/config/data-source.ts
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
 import { User } from '../entity/User'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'el shishir',
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    username: process.env.DB_USERNAME,
+    password: String(process.env.DB_PASSWORD),
     database: process.env.NODE_ENV === 'test' ? 'pizza_test' : 'pizza',
     synchronize: false,
     logging: false,
