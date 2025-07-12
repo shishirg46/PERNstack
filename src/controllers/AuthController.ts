@@ -17,10 +17,14 @@ export class AuthController {
     ) {
         const result = validationResult(req)
         if (!result.isEmpty()) {
-            res.status(400).json({
-                errors: result.array(),
-            })
+            return next(
+                Object.assign(new Error('Validation failed'), {
+                    statusCode: 400,
+                    errors: result.array(),
+                }),
+            )
         }
+
         const { firstName, lastName, email, password } = req.body
         this.logger.debug('new request to register a user', {
             firstName,
