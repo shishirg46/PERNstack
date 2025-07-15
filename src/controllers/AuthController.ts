@@ -8,6 +8,7 @@ import { validationResult } from 'express-validator'
 import { JwtPayload, sign } from 'jsonwebtoken'
 import path from 'path'
 import createHttpError from 'http-errors'
+import { Config } from '../config'
 
 export class AuthController {
     constructor(
@@ -67,9 +68,13 @@ export class AuthController {
             const accessToken = sign(payload, privateKey, {
                 algorithm: 'RS256',
                 expiresIn: '1hr',
-                issuer: 'authservice',
+                issuer: 'auth-service',
             })
-            const refreshToken = 'hdsjbjhxbde'
+            const refreshToken = sign(payload, Config.REFRESH_TOKEN_SECRET!, {
+                algorithm: 'HS256',
+                expiresIn: '1y',
+                issuer: 'auth-service',
+            })
 
             res.cookie('accessToken', accessToken, {
                 domain: 'localhost',
@@ -81,7 +86,7 @@ export class AuthController {
             res.cookie('refreshToken', refreshToken, {
                 domain: 'localhost',
                 sameSite: 'strict',
-                maxAge: 1000 * 60 * 60 * 24 * 365, //1hr
+                maxAge: 1000 * 60 * 60 * 24 * 365, //1y
                 httpOnly: true, // very important
             })
             res.status(201).json({ id: newUser.id })
