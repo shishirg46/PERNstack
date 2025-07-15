@@ -12,7 +12,7 @@ export default tseslint.config(
             'jest.config.js',
             '**/*.spec.ts',
             'scripts',
-            'tsconfig.json'
+            'tsconfig.json',
         ],
     },
     {

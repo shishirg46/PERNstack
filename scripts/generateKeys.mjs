@@ -7,12 +7,12 @@ const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
     modulusLength: 2048,
     publicKeyEncoding: {
         type: 'pkcs1', // or 'spki'
-        format: 'pem'
+        format: 'pem',
     },
     privateKeyEncoding: {
         type: 'pkcs1', // or 'pkcs8'
-        format: 'pem'
-    }
+        format: 'pem',
+    },
 })
 
 // Log keys
