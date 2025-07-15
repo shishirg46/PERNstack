@@ -3,8 +3,13 @@ import fs from 'fs'
 import createHttpError from 'http-errors'
 import path from 'path'
 import { Config } from '../config'
+import { User } from '../entity/User'
+import { RefreshToken } from '../entity/RefreshToken'
+import { Repository } from 'typeorm'
 
 export class TokenService {
+    constructor(private refreshTokenRepo: Repository<RefreshToken>) {}
+
     generateAccessToken(payload: JwtPayload) {
         let privateKey: Buffer
         try {
@@ -34,5 +39,20 @@ export class TokenService {
             jwtid: String(payload.id),
         })
         return refreshToken
+    }
+
+    async persistRefreshToken(newUser: User) {
+        const RefreshTokenExpiryDate = (): Date => {
+            const date = new Date()
+            date.setFullYear(date.getFullYear() + 1) // auto-handles leap year
+            return date
+        }
+
+        const newRefreshToken = await this.refreshTokenRepo.save({
+            user: newUser,
+            expiresAt: RefreshTokenExpiryDate(),
+        })
+
+        return newRefreshToken
     }
 }
