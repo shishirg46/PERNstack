@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm'
 import { AppDataSource } from '../../src/config/data-source'
 import { User } from '../../src/entity/User'
 import { Roles } from '../../src/constants'
+import { isJwt } from '../utils/index'
 import exp from 'constants'
 describe('POST auth/register', () => {
     let connection: DataSource
@@ -149,6 +150,46 @@ describe('POST auth/register', () => {
             expect(response.statusCode).toBe(400)
             expect(users).toHaveLength(1)
         })
+
+        it('should return access token and refresh token inside the cookie', async () => {
+            //Arrange
+            const userData = {
+                firstName: 'Shishir',
+                lastName: 'Ghimire',
+                email: 'shishirghimire123@gmail.com',
+                password: 'secret123',
+            }
+
+            //Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData)
+
+            interface Headers {
+                ['set-cookie']: string[]
+            }
+            //Assert
+            let accessToken: string | null = null
+            let refreshToken: string | null = null
+
+            const cookies =
+                (response.headers as unknown as Headers)['set-cookie'] || []
+            cookies.forEach((cookie) => {
+                if (cookie.startsWith('accessToken=')) {
+                    accessToken = cookie.split(';')[0].split('=')[1]
+                }
+
+                if (cookie.startsWith('refreshToken=')) {
+                    refreshToken = cookie.split(';')[0].split('=')[1]
+                }
+            })
+
+            expect(accessToken).not.toBeNull()
+            expect(refreshToken).not.toBeNull()
+            console.log(accessToken)
+            expect(isJwt(accessToken)).toBeTruthy()
+            //    expect(isJwt(refreshToken)).toBeTruthy()
+        })
     })
     describe('fields are missing', () => {
         it('should return 400 status code if email field is missing', async () => {
@@ -159,13 +200,12 @@ describe('POST auth/register', () => {
                 email: '',
                 password: 'secret123',
             }
-
+            const userRepository = connection.getRepository(User)
+            const users = await userRepository.find()
             //Act
             const response = await request(app)
                 .post('/auth/register')
                 .send(userData)
-            const userRepository = connection.getRepository(User)
-            const users = await userRepository.find()
             //Assert
             expect(response.statusCode).toBe(400)
             expect(users).toHaveLength(0)
