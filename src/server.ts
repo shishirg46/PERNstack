@@ -1,17 +1,24 @@
 import app from './app'
 import { Config } from './config'
+import { AppDataSource } from './config/data-source'
 import logger from './config/logger'
 
-const startServer = () => {
+const startServer = async () => {
     const port = Config.PORT
     try {
+        await AppDataSource.initialize()
+        logger.info('Database connected successfully')
         app.listen(port, () => {
             logger.info(`listening on port`, { port: port })
         })
-    } catch (err) {
-        console.log(err)
-        process.exit(1)
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            logger.error(err.message)
+            setTimeout(() => {
+                process.exit(1)
+            }, 1000)
+        }
     }
 }
 
-startServer()
+void startServer()
