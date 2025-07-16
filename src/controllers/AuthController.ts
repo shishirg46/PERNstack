@@ -149,7 +149,7 @@ export class AuthController {
                 maxAge: 1000 * 60 * 60 * 24 * 365, //1y
                 httpOnly: true, // very important
             })
-            res.status(201).json({ id: user.id })
+            res.status(200).json({ id: user.id })
         } catch (err) {
             console.log(err)
         }
